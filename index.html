@@ -3,335 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KHTN 6 - Ôn Tập 56 Câu</title>
+    <title>Ôn Tập KHTN 6 - 56 Câu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f1f5f9;
-            height: 100vh;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .main-card {
-            width: 96vw;
-            height: 94vh;
-            max-width: 1200px;
-            background: white;
-            border-radius: 24px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
-
-        .split-content {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .q-side {
-            flex: 1.3;
-            padding: 3rem;
-            background: #f8fafc;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            border-right: 1px solid #e2e8f0;
-        }
-
-        .a-side {
-            flex: 1;
-            padding: 2.5rem;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .opt-item {
-            width: 100%;
-            padding: 16px 20px;
-            margin-bottom: 12px;
-            border: 2px solid #f1f5f9;
-            border-radius: 12px;
-            text-align: left;
-            font-weight: 600;
-            transition: all 0.2s;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            color: #475569;
-            background: white;
-        }
-
-        .opt-item:hover:not(:disabled) {
-            border-color: #3b82f6;
-            background-color: #eff6ff;
-            transform: translateX(6px);
-        }
-
-        .is-correct {
-            background-color: #dcfce7 !important;
-            border-color: #22c55e !important;
-            color: #166534 !important;
-        }
-
-        .is-wrong {
-            background-color: #fee2e2 !important;
-            border-color: #ef4444 !important;
-            color: #991b1b !important;
-        }
-
-        .stat-badge {
-            padding: 4px 12px;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 800;
-        }
+        body { font-family: system-ui, -apple-system, sans-serif; background: #f1f5f9; }
+        .card { background: white; border-radius: 1.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .opt-btn { transition: all 0.2s; border: 2px solid #e2e8f0; }
+        .opt-btn:hover:not(:disabled) { border-color: #3b82f6; background: #eff6ff; }
+        .is-correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
+        .is-wrong { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+        .step-box { background: #f8fafc; border-left: 4px solid #3b82f6; padding: 10px; margin-bottom: 8px; border-radius: 4px; font-size: 0.9rem; }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex items-center justify-center p-4">
 
-<div class="main-card">
+<div class="card w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden">
     <!-- Header -->
-    <div class="h-16 px-8 border-b flex items-center justify-between">
-        <div class="flex items-center gap-4">
-            <span class="text-blue-600 font-black text-2xl">KHTN 6</span>
-            <div class="flex gap-2">
-                <span class="stat-badge bg-green-100 text-green-700">Đúng: <span id="c-count">0</span></span>
-                <span class="stat-badge bg-red-100 text-red-700">Sai: <span id="w-count">0</span></span>
+    <div class="p-4 border-b flex justify-between items-center bg-white">
+        <div>
+            <h1 class="font-black text-blue-600 text-lg uppercase">KHTN 6 - Đề Cương Ôn Tập</h1>
+            <div class="flex gap-3 text-[10px] font-bold mt-1">
+                <span class="text-green-600 bg-green-50 px-2 py-0.5 rounded">ĐÚNG: <span id="sc-c">0</span></span>
+                <span class="text-red-600 bg-red-50 px-2 py-0.5 rounded">SAI: <span id="sc-w">0</span></span>
             </div>
         </div>
-        
         <div class="flex items-center gap-4">
             <div class="text-right">
-                <div class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Tiến độ</div>
-                <div id="p-text" class="text-sm font-bold text-slate-700">1 / 56</div>
-            </div>
-            <div class="w-32 h-2.5 bg-slate-100 rounded-full overflow-hidden">
-                <div id="p-bar" class="bg-blue-500 h-full transition-all duration-500" style="width: 0%"></div>
+                <p id="prog-txt" class="text-xs font-bold text-slate-400">1 / 56</p>
+                <div class="w-24 h-1.5 bg-slate-100 rounded-full mt-1">
+                    <div id="prog-bar" class="h-full bg-blue-500 rounded-full transition-all" style="width: 0%"></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Quiz Body -->
-    <div id="quiz-view" class="split-content">
-        <div class="q-side">
-            <div id="topic-tag" class="inline-block bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded mb-4 uppercase tracking-wider w-fit">BÀI HỌC</div>
-            <h2 id="q-body" class="text-3xl font-bold text-slate-800 leading-tight">
-                Đang chuẩn bị dữ liệu 56 câu hỏi...
-            </h2>
+    <!-- Main -->
+    <div id="quiz-area" class="flex-1 flex overflow-hidden">
+        <!-- Cột câu hỏi -->
+        <div class="flex-1 p-8 overflow-y-auto bg-slate-50 border-r">
+            <div id="badge" class="inline-block px-2 py-0.5 bg-blue-600 text-white text-[10px] font-bold rounded mb-4 uppercase tracking-tighter">BÀI HỌC</div>
+            <h2 id="q-text" class="text-2xl font-bold text-slate-800 leading-snug mb-6">Đang tải dữ liệu...</h2>
+            
+            <div id="steps-area" class="hidden">
+                <p class="text-xs font-black text-blue-500 mb-3 uppercase tracking-wider">Danh sách các bước:</p>
+                <div id="steps-list"></div>
+            </div>
         </div>
-        <div class="a-side">
-            <div id="a-list"></div>
+
+        <!-- Cột đáp án -->
+        <div class="w-full max-w-sm p-8 bg-white overflow-y-auto">
+            <div id="options-list" class="space-y-3"></div>
         </div>
     </div>
 
-    <!-- Final Result -->
-    <div id="result-view" class="hidden flex-1 flex flex-col items-center justify-center p-8 text-center">
-        <div id="res-icon" class="text-7xl mb-4">⭐</div>
-        <h2 class="text-4xl font-black text-slate-800 mb-2">KẾT QUẢ ÔN TẬP</h2>
-        <p id="res-rank" class="text-xl font-bold mb-8 uppercase tracking-widest">Hạng: Đang tính...</p>
-        
-        <div class="grid grid-cols-3 gap-6 mb-10 w-full max-w-lg">
-            <div class="bg-slate-50 p-6 rounded-2xl">
-                <p class="text-slate-400 text-xs font-bold uppercase mb-1">Số câu đúng</p>
-                <p class="text-3xl font-black text-blue-600"><span id="res-c">0</span>/56</p>
+    <!-- Kết quả -->
+    <div id="result-area" class="hidden flex-1 flex flex-col items-center justify-center p-10 text-center">
+        <div class="text-6xl mb-4">⭐</div>
+        <h2 class="text-3xl font-black text-slate-800 uppercase">Hoàn Thành</h2>
+        <p id="rank" class="text-blue-600 font-bold mt-2 text-lg"></p>
+        <div class="grid grid-cols-2 gap-4 w-full max-w-xs mt-8">
+            <div class="bg-slate-50 p-4 rounded-xl">
+                <p class="text-[10px] font-bold text-slate-400 uppercase">Đúng</p>
+                <p id="res-c" class="text-2xl font-black">0</p>
             </div>
-            <div class="bg-slate-50 p-6 rounded-2xl">
-                <p class="text-slate-400 text-xs font-bold uppercase mb-1">Độ chính xác</p>
-                <p id="res-pct" class="text-3xl font-black text-green-600">0%</p>
-            </div>
-            <div class="bg-slate-50 p-6 rounded-2xl">
-                <p class="text-slate-400 text-xs font-bold uppercase mb-1">Số câu sai</p>
-                <p id="res-w" class="text-3xl font-black text-red-500">0</p>
+            <div class="bg-slate-50 p-4 rounded-xl">
+                <p class="text-[10px] font-bold text-slate-400 uppercase">Tỷ lệ</p>
+                <p id="res-p" class="text-2xl font-black text-blue-600">0%</p>
             </div>
         </div>
-
-        <button onclick="location.reload()" class="bg-blue-600 text-white px-12 py-4 rounded-2xl font-bold text-lg shadow-lg hover:bg-blue-700 transition-all">LÀM LẠI TỪ ĐẦU</button>
+        <button onclick="location.reload()" class="mt-8 px-8 py-3 bg-blue-600 text-white font-bold rounded-xl shadow-lg hover:bg-blue-700">Làm lại</button>
     </div>
 
     <!-- Footer -->
-    <div class="h-20 px-8 border-t bg-slate-50 flex items-center justify-between rounded-b-24">
-        <button id="prev-btn" onclick="prev()" class="text-slate-400 font-bold hover:text-slate-800 disabled:opacity-0 transition-all">
-            &larr; CÂU TRƯỚC
-        </button>
-        <div id="msg" class="text-slate-400 font-medium italic text-sm">Hãy chọn đáp án đúng nhất</div>
-        <button id="next-btn" onclick="next()" class="bg-blue-600 text-white px-10 py-3 rounded-xl font-bold opacity-0 pointer-events-none transition-all">
-            TIẾP THEO &rarr;
-        </button>
+    <div class="p-4 border-t bg-white flex justify-between items-center px-8">
+        <button id="btn-p" onclick="p()" class="text-sm font-bold text-slate-400 hover:text-slate-800 disabled:opacity-0">QUAY LẠI</button>
+        <p id="msg" class="text-xs italic text-slate-400 font-medium">Chọn đáp án đúng nhất</p>
+        <button id="btn-n" onclick="n()" class="opacity-0 pointer-events-none px-6 py-2 bg-blue-600 text-white font-bold rounded-lg text-sm">TIẾP THEO</button>
     </div>
 </div>
 
 <script>
     const data = [
-        { q: "Thành phần chiếm tỉ lệ lớn nhất trong không khí là:", a: ["Oxygen (O2).", "Nitrogen (N2).", "Carbon dioxide (CO2).", "Hơi nước."], c: 1, t: "BÀI 7: OXYGEN KHÔNG KHÍ" },
+        { q: "Thành phần chiếm tỉ lệ lớn nhất trong không khí là:", a: ["Oxygen (O₂).", "Nitrogen (N₂).", "Carbon dioxide (CO₂).", "Hơi nước."], c: 1, t: "BÀI 7: OXYGEN KHÔNG KHÍ" },
         { q: "Oxygen cần thiết cho quá trình nào của con người và động vật?", a: ["Quang hợp.", "Hô hấp.", "Tiêu hoá.", "Bài tiết."], c: 1, t: "BÀI 7: OXYGEN KHÔNG KHÍ" },
-        { q: "Khi úp cốc thuỷ tinh lên ngọn nến đang cháy, sau một thời gian nến tắt là vì:", a: ["Gió thổi tắt.", "Oxygen trong cốc đã dùng hết cho sự cháy.", "Nitrogen làm nến tắt.", "Không khí trong cốc quá lạnh."], c: 1, t: "BÀI 7: OXYGEN KHÔNG KHÍ" },
-        { q: "Biện pháp nào góp phần làm giảm ô nhiễm không khí?", a: ["Đốt rác thải.", "Bếp than phòng kín.", "Trồng nhiều cây xanh.", "Sử dụng xe máy cũ."], c: 2, t: "BÀI 7: OXYGEN KHÔNG KHÍ" },
+        { q: "Khi úp cốc thuỷ tinh lên ngọn nến đang cháy, một lúc sau nến tắt vì:", a: ["Gió thổi tắt.", "Oxygen đã dùng hết cho sự cháy.", "Nitrogen làm tắt lửa.", "Không khí quá lạnh."], c: 1, t: "BÀI 7: OXYGEN KHÔNG KHÍ" },
+        { q: "Biện pháp nào góp phần làm giảm ô nhiễm không khí?", a: ["Đốt rác thải.", "Dùng bếp than phòng kín.", "Trồng nhiều cây xanh.", "Dùng xe máy cũ."], c: 2, t: "BÀI 7: OXYGEN KHÔNG KHÍ" },
         { q: "Khí oxygen chiếm khoảng bao nhiêu phần trăm thể tích không khí?", a: ["78%.", "21%.", "28%.", "10%."], c: 1, t: "BÀI 7: OXYGEN KHÔNG KHÍ" },
-        { q: "Ứng dụng thở oxygen trong bệnh viện dựa vào tính chất:", a: ["Duy trì sự sống.", "Ít tan trong nước.", "Duy trì sự cháy.", "Không mùi."], c: 0, t: "BÀI 7: OXYGEN KHÔNG KHÍ" },
-        { q: "Biện pháp KHÔNG góp phần giảm thiểu ô nhiễm không khí?", a: ["Tăng cường xe máy cá nhân.", "Cắt giảm khí thải nhà máy.", "Không đốt rơm rạ.", "Trồng nhiều cây xanh."], c: 0, t: "BÀI 7: OXYGEN KHÔNG KHÍ" },
-        { q: "Tính chất nào sau đây SAI khi nói về oxygen?", a: ["Là chất khí.", "Chiếm 21% không khí.", "Tan nhiều trong nước.", "Không màu, không mùi."], c: 2, t: "BÀI 7: OXYGEN KHÔNG KHÍ" },
-        { q: "Vật liệu nào sau đây được dùng để xây dựng nhà ở?", a: ["Gỗ.", "Xăng.", "Than đá.", "Dầu hỏa."], c: 0, t: "BÀI 8: VẬT LIỆU" },
+        { q: "Thở oxygen trong bệnh viện dựa vào tính chất:", a: ["Duy trì sự sống.", "Ít tan trong nước.", "Duy trì sự cháy.", "Không mùi."], c: 0, t: "BÀI 7: OXYGEN KHÔNG KHÍ" },
+        { q: "Biện pháp KHÔNG góp phần giảm ô nhiễm không khí?", a: ["Tăng xe máy cá nhân.", "Cắt giảm khí thải.", "Không đốt rơm rạ.", "Trồng cây xanh."], c: 0, t: "BÀI 7: OXYGEN KHÔNG KHÍ" },
+        { q: "Tính chất nào SAI về oxygen?", a: ["Chất khí.", "Chiếm 21% không khí.", "Tan nhiều trong nước.", "Không màu, không mùi."], c: 2, t: "BÀI 7: OXYGEN KHÔNG KHÍ" },
+        { q: "Vật liệu dùng để xây dựng nhà ở là:", a: ["Gỗ.", "Xăng.", "Than đá.", "Dầu hỏa."], c: 0, t: "BÀI 8: VẬT LIỆU" },
         { q: "Chất nào sau đây là nhiên liệu?", a: ["Cát.", "Nhựa.", "Xăng.", "Sắt."], c: 2, t: "BÀI 8: NHIÊN LIỆU" },
-        { q: "Nguyên liệu dùng để sản xuất giấy là:", a: ["Quặng sắt.", "Gỗ.", "Than đá.", "Nhôm."], c: 1, t: "BÀI 8: NGUYÊN LIỆU" },
-        { q: "Vật liệu dùng để làm vỏ máy bay là:", a: ["Đồng.", "Nhôm.", "Sắt.", "Vàng."], c: 1, t: "BÀI 8: VẬT LIỆU" },
-        { q: "Vì sao xăng được dùng làm nhiên liệu cho xe máy?", a: ["Dễ bay hơi.", "Cháy và tỏa nhiều nhiệt.", "Mùi dễ chịu.", "Màu trong suốt."], c: 1, t: "BÀI 8: NHIÊN LIỆU" },
-        { q: "Sử dụng nhiên liệu hợp lí và bảo vệ môi trường là:", a: ["Đốt rác bừa bãi.", "Dùng bếp than kín.", "Dùng nhiều nilon.", "Dùng năng lượng mặt trời."], c: 3, t: "BÀI 8: NHIÊN LIỆU" },
-        { q: "Vật liệu dùng làm lõi dây điện là:", a: ["Gốm.", "Thủy tinh.", "Đồng.", "Gỗ."], c: 2, t: "BÀI 8: VẬT LIỆU" },
-        { q: "Nhiên liệu nào KHÔNG được chế biến từ dầu mỏ?", a: ["Khí hóa lỏng.", "Xăng.", "Dầu diesel.", "Than."], c: 3, t: "BÀI 8: NHIÊN LIỆU" },
-        { q: "An ninh năng lượng là gì?", a: ["Đảm bảo đủ dùng, sạch, rẻ.", "Đảm bảo đủ điện.", "Đảm bảo nhiều dạng năng lượng.", "Cung cấp đủ mọi cách."], c: 0, t: "BÀI 8: NHIÊN LIỆU" },
-        { q: "Tính chất KHÔNG phải tính chất chung của kim loại?", a: ["Tính dẻo.", "Tính cứng.", "Dẫn nhiệt.", "Dẫn điện."], c: 1, t: "BÀI 8: VẬT LIỆU" },
-        { q: "Để tiết kiệm gas khi đun nấu, cần:", a: ["Lửa nhỏ nhất.", "Lửa lớn nhất.", "Không thay đổi.", "Chỉnh lửa phù hợp đáy nồi."], c: 3, t: "BÀI 8: NHIÊN LIỆU" },
-        { q: "Chất nào sau đây là chất tinh khiết?", a: ["Nước muối.", "Không khí.", "Nước cất.", "Nước sông."], c: 2, t: "BÀI 10: HỖN HỢP" },
-        { q: "Dung dịch là:", a: ["Hỗn hợp không tan.", "Hỗn hợp đồng nhất chất tan và dung môi.", "Chất 1 thành phần.", "Hỗn hợp không đồng nhất."], c: 1, t: "BÀI 10: HỖN HỢP" },
-        { q: "Hòa muối vào nước thu được dung dịch vì:", a: ["Muối tan tạo hỗn hợp đồng nhất.", "Muối lắng xuống.", "Muối bay hơi.", "Nước tinh khiết."], c: 0, t: "BÀI 10: HỖN HỢP" },
-        { q: "Hỗn hợp nào là dung dịch?", a: ["Cát và nước.", "Dầu và nước.", "Đường và nước.", "Gạo và sỏi."], c: 2, t: "BÀI 10: HỖN HỢP" },
-        { q: "Bột sắn dây vào nước và khuấy đều thu được:", a: ["Dung dịch.", "Nhũ tương.", "Dung môi.", "Huyền phù."], c: 3, t: "BÀI 10: HỖN HỢP" },
-        { q: "Trường hợp nào KHÔNG phải là hỗn hợp?", a: ["Muối ăn (NaCl).", "Bột canh.", "Nước khoáng.", "Nước muối sinh lí."], c: 0, t: "BÀI 10: HỖN HỢP" },
-        { q: "Dầu ăn vào giấm và khuấy đều thu được:", a: ["Nhũ tương.", "Huyền phù.", "Dung dịch.", "Dung môi."], c: 0, t: "BÀI 10: HỖN HỢP" },
-        { q: "Hai thìa muối vào cốc nước và khuấy đều thu được:", a: ["Huyền phù.", "Nhũ tương.", "Dung dịch muối.", "Chất tinh khiết."], c: 2, t: "BÀI 10: HỖN HỢP" },
-        { q: "Thành phần chính của đá vôi là:", a: ["Sắt.", "Đồng.", "Sodium carbonate.", "Calcium carbonate."], c: 3, t: "BÀI 10: HỖN HỢP" },
+        { q: "Nguyên liệu để sản xuất giấy là:", a: ["Quặng sắt.", "Gỗ.", "Than đá.", "Nhôm."], c: 1, t: "BÀI 8: NGUYÊN LIỆU" },
+        { q: "Vật liệu làm vỏ máy bay là:", a: ["Đồng.", "Nhôm.", "Sắt.", "Vàng."], c: 1, t: "BÀI 8: VẬT LIỆU" },
+        { q: "Vì sao xăng dùng làm nhiên liệu cho xe máy?", a: ["Dễ bay hơi.", "Cháy tỏa nhiều nhiệt.", "Mùi thơm.", "Màu đẹp."], c: 1, t: "BÀI 8: NHIÊN LIỆU" },
+        { q: "Sử dụng nhiên liệu hợp lí, bảo vệ môi trường là:", a: ["Đốt rác.", "Dùng bếp than kín.", "Dùng túi nilon.", "Dùng năng lượng mặt trời."], c: 3, t: "BÀI 8: NHIÊN LIỆU" },
+        { q: "Lõi dây điện thường làm bằng:", a: ["Gốm.", "Thủy tinh.", "Đồng.", "Gỗ."], c: 2, t: "BÀI 8: VẬT LIỆU" },
+        { q: "Nhiên liệu KHÔNG chế biến từ dầu mỏ?", a: ["Khí hóa lỏng.", "Xăng.", "Dầu diesel.", "Than."], c: 3, t: "BÀI 8: NHIÊN LIỆU" },
+        { q: "An ninh năng lượng là:", a: ["Đủ dùng, sạch, rẻ.", "Đủ điện.", "Nhiều dạng năng lượng.", "Cung cấp mọi giá."], c: 0, t: "BÀI 8: NHIÊN LIỆU" },
+        { q: "Tính chất KHÔNG phải của kim loại?", a: ["Dẻo.", "Cứng.", "Dẫn nhiệt.", "Dẫn điện."], c: 1, t: "BÀI 8: VẬT LIỆU" },
+        { q: "Để tiết kiệm gas cần điều chỉnh:", a: ["Lửa thật nhỏ.", "Lửa thật lớn.", "Giữ nguyên.", "Phù hợp đáy nồi."], c: 3, t: "BÀI 8: NHIÊN LIỆU" },
+        { q: "Chất tinh khiết là:", a: ["Nước biển.", "Nước cất.", "Nước cam.", "Nước sông."], c: 1, t: "BÀI 10: HỖN HỢP" },
+        { q: "Dung dịch là:", a: ["Hỗn hợp không tan.", "Hỗn hợp đồng nhất.", "Chất 1 thành phần.", "Hỗn hợp không đồng nhất."], c: 1, t: "BÀI 10: HỖN HỢP" },
+        { q: "Muối tan vào nước tạo dung dịch vì:", a: ["Tạo hỗn hợp đồng nhất.", "Muối lắng xuống.", "Muối bay hơi.", "Nước biến sạch."], c: 0, t: "BÀI 10: HỖN HỢP" },
+        { q: "Hỗn hợp nào là dung dịch?", a: ["Cát + nước.", "Dầu + nước.", "Đường + nước.", "Gạo + sỏi."], c: 2, t: "BÀI 10: HỖN HỢP" },
+        { q: "Bột sắn dây vào nước khuấy đều là:", a: ["Dung dịch.", "Nhũ tương.", "Dung môi.", "Huyền phù."], c: 3, t: "BÀI 10: HỖN HỢP" },
+        { q: "Trường hợp nào KHÔNG phải hỗn hợp?", a: ["Muối ăn (NaCl).", "Bột canh.", "Nước khoáng.", "Nước muối sinh lí."], c: 0, t: "BÀI 10: HỖN HỢP" },
+        { q: "Dầu ăn vào giấm khuấy đều là:", a: ["Nhũ tương.", "Huyền phù.", "Dung dịch.", "Dung môi."], c: 0, t: "BÀI 10: HỖN HỢP" },
+        { q: "Muối vào cốc nước khuấy đều là:", a: ["Huyền phù.", "Nhũ tương.", "Dung dịch muối.", "Chất tinh khiết."], c: 2, t: "BÀI 10: HỖN HỢP" },
+        { q: "Thành phần chính của đá vôi:", a: ["Sắt.", "Đồng.", "Sodium carbonate.", "Calcium carbonate."], c: 3, t: "BÀI 10: HỖN HỢP" },
         { q: "Đơn vị đo chiều dài là:", a: ["Kilogam.", "Mét (m).", "Giây.", "Lít."], c: 1, t: "BÀI 3: ĐO LƯỜNG" },
-        { q: "Dụng cụ dùng để đo khối lượng là:", a: ["Thước kẻ.", "Đồng hồ.", "Cân.", "Nhiệt kế."], c: 2, t: "BÀI 3: ĐO LƯỜNG" },
-        { q: "Đơn vị đo thời gian chính thức của nước ta là:", a: ["Ngày.", "Giờ.", "Giây (s).", "Tháng."], c: 2, t: "BÀI 3: ĐO LƯỜNG" },
-        { q: "Dụng cụ thích hợp đo chiều dài quyển sách?", a: ["Thước kẻ.", "Cân điện tử.", "Bấm giây.", "Cốc."], c: 0, t: "BÀI 3: ĐO LƯỜNG" },
-        { q: "Để kết quả đo chính xác, cần đặt thước:", a: ["Cách vật.", "Vạch 0 trùng 1 đầu vật.", "Nghiêng.", "Lệch."], c: 1, t: "BÀI 3: ĐO LƯỜNG" },
-        { q: "Kết quả đo bút là 12,5 cm. Con số này là:", a: ["Đơn vị.", "Dụng cụ.", "Kết quả đo.", "GHĐ."], c: 2, t: "BÀI 3: ĐO LƯỜNG" },
+        { q: "Dụng cụ đo khối lượng là:", a: ["Thước.", "Đồng hồ.", "Cân.", "Nhiệt kế."], c: 2, t: "BÀI 3: ĐO LƯỜNG" },
+        { q: "Đơn vị đo thời gian chính thức là:", a: ["Ngày.", "Giờ.", "Giây (s).", "Tháng."], c: 2, t: "BÀI 3: ĐO LƯỜNG" },
+        { q: "Đo chiều dài quyển sách dùng:", a: ["Thước kẻ.", "Cân.", "Đồng hồ.", "Cốc."], c: 0, t: "BÀI 3: ĐO LƯỜNG" },
+        { q: "Đặt thước đúng cách khi đo:", a: ["Cách vật.", "Vạch 0 trùng đầu vật.", "Nghiêng.", "Lệch mắt."], c: 1, t: "BÀI 3: ĐO LƯỜLYNG" },
+        { q: "Bút dài 12,5cm. Con số 12,5cm là:", a: ["Đơn vị.", "Dụng cụ.", "Kết quả đo.", "GHĐ."], c: 2, t: "BÀI 3: ĐO LƯỜNG" },
         { q: "Đo thời gian chạy 100m dùng:", a: ["Đồng hồ treo.", "Đồng hồ bàn.", "Đồng hồ bấm giây.", "Lịch."], c: 2, t: "BÀI 3: ĐO LƯỜNG" },
-        { q: "Túi gạo 2 kg. Con số 2 cho biết:", a: ["Đơn vị.", "Khối lượng.", "Dụng cụ.", "Cách đo."], c: 1, t: "BÀI 3: ĐO LƯỜNG" },
-        { q: "Các bước đo khối lượng cân đồng hồ là:", a: ["(1)-(4)-(3)-(2).", "(1)-(2)-(3)-(4).", "(2)-(1)-(3)-(4).", "(2)-(1)-(4)-(3)."], c: 0, t: "BÀI 3: ĐO LƯỜNG" },
-        { q: "Đơn vị đo chiều dài là:", a: ["Kilogam.", "Lít.", "Giây.", "Mét."], c: 3, t: "BÀI 3: ĐO LƯỜNG" },
-        { q: "Thước 10cm có 10 vạch nhỏ/cm. GHĐ và ĐCNN?", a: ["10cm, 10mm.", "10cm, 0.1mm.", "10cm, 100mm.", "10cm, 1mm."], c: 3, t: "BÀI 3: ĐO LƯỜNG" },
+        { q: "Túi gạo 2kg. Số 2 cho biết:", a: ["Đơn vị.", "Khối lượng.", "Dụng cụ.", "Cách đo."], c: 1, t: "BÀI 3: ĐO LƯỜNG" },
+        { 
+            q: "Sắp xếp thứ tự các bước đo khối lượng vật bằng cân đồng hồ:", 
+            s: ["(1) Đặt vật lên đĩa cân.", "(2) Đọc và ghi kết quả.", "(3) Ước lượng để chọn cân.", "(4) Hiệu chỉnh về vạch 0."],
+            a: ["(1)-(4)-(3)-(2)", "(3)-(4)-(1)-(2)", "(2)-(1)-(3)-(4)", "(4)-(1)-(2)-(3)"], 
+            c: 1, t: "BÀI 3: ĐO KHỐI LƯỢNG" 
+        },
+        { q: "Đơn vị đo chiều dài là:", a: ["Kg.", "Lít.", "Giây.", "Mét."], c: 3, t: "BÀI 3: ĐO LƯỜNG" },
+        { q: "Thước 10cm có 10 vạch nhỏ mỗi cm. GHĐ và ĐCNN?", a: ["10cm, 10mm.", "10cm, 0.1mm.", "10cm, 100mm.", "10cm, 1mm."], c: 3, t: "BÀI 3: ĐO LƯỜNG" },
         { q: "Đổi đơn vị nào ĐÚNG?", a: ["1 yến = 100kg.", "1 tấn = 10 tạ.", "1kg = 10g.", "1 tấn = 100kg."], c: 1, t: "BÀI 3: ĐO LƯỜNG" },
-        { q: "Đơn vị đo khối lượng là:", a: ["Tuần.", "Tấn.", "Giây.", "Ngày."], c: 1, t: "BÀI 3: ĐO LƯỜNG" },
-        { q: "Giới hạn đo (GHĐ) của thước là:", a: ["Giữa 2 vạch.", "Độ dài nhỏ nhất.", "Độ dài lớn nhất ghi trên thước.", "Vạch chia."], c: 2, t: "BÀI 3: ĐO LƯỜNG" },
-        { q: "Thứ tự bước đo độ dài vật?", a: ["(2)-(1)-(3)-(4).", "(1)-(2)-(4)-(3).", "(1)-(2)-(3)-(4).", "(2)-(1)-(4)-(3)."], c: 2, t: "BÀI 3: ĐO LƯỜNG" },
-        { q: "Để đo độ dài vật nên dùng:", a: ["Bàn chân.", "Thước.", "Gang tay.", "Dây."], c: 1, t: "BÀI 3: ĐO LƯỜNG" },
+        { q: "Đơn vị khối lượng là:", a: ["Tuần.", "Tấn.", "Giây.", "Ngày."], c: 1, t: "BÀI 3: ĐO LƯỜNG" },
+        { q: "Giới hạn đo (GHĐ) của thước là:", a: ["Giữa 2 vạch.", "Độ dài nhỏ nhất.", "Độ dài lớn nhất trên thước.", "Vạch chia."], c: 2, t: "BÀI 3: ĐO LƯỜNG" },
+        { 
+            q: "Sắp xếp thứ tự các bước đo độ dài vật:", 
+            s: ["(1) Ước lượng chọn thước.", "(2) Đặt thước dọc vật.", "(3) Đọc và ghi kết quả.", "(4) Hiệu chỉnh thước."],
+            a: ["(2)-(1)-(3)-(4)", "(1)-(4)-(2)-(3)", "(1)-(2)-(4)-(3)", "(4)-(1)-(2)-(3)"], 
+            c: 1, t: "BÀI 3: ĐO ĐỘ DÀI" 
+        },
+        { q: "Để đo độ dài chính xác nhất nên dùng:", a: ["Bàn chân.", "Thước đo.", "Gang tay.", "Dây."], c: 1, t: "BÀI 3: ĐO LƯỜNG" },
         { q: "Dụng cụ đo nhiệt độ là:", a: ["Thước.", "Cân.", "Nhiệt kế.", "Đồng hồ."], c: 2, t: "BÀI 4: ĐO NHIỆT ĐỘ" },
-        { q: "Lưu ý đo cơ thể bằng nhiệt kế thủy ngân?", a: ["Cầm thật chặt.", "Đọc khi chưa ổn định.", "Bầu tiếp xúc và đợi.", "Lắc khi đo."], c: 2, t: "BÀI 4: ĐO NHIỆT ĐỘ" },
+        { q: "Lưu ý đo cơ thể bằng nhiệt kế thủy ngân?", a: ["Cầm chặt bầu.", "Đọc ngay.", "Bầu tiếp xúc và đợi.", "Lắc khi đo."], c: 2, t: "BÀI 4: ĐO NHIỆT ĐỘ" },
         { q: "Đo nhiệt độ nước nóng an toàn cần:", a: ["Chạm đáy.", "Sát thành.", "Bầu không chạm đáy/thành.", "Cầm tay."], c: 2, t: "BÀI 4: ĐO NHIỆT ĐỘ" },
         { q: "Nhiệt kế 0°C đo người không hợp vì:", a: ["Dài.", "GHĐ không phù hợp.", "Không chuẩn.", "Khó dùng."], c: 1, t: "BÀI 4: ĐO NHIỆT ĐỘ" },
-        { q: "Nhiệt kế y tế thủy ngân dựa trên hiện tượng:", a: ["Nở chất rắn.", "Nở các chất.", "Nở chất lỏng.", "Nở chất khí."], c: 2, t: "BÀI 4: ĐO NHIỆT ĐỘ" },
-        { q: "Dụng cụ đo nhiệt độ là:", a: ["Đồng hồ.", "Cốc.", "Cân.", "Nhiệt kế."], c: 3, t: "BÀI 4: ĐO NHIỆT ĐỘ" },
-        { q: "Dụng cụ đo nhiệt độ sôi của nước?", a: ["Nhiệt kế đổi màu.", "Nhiệt kế rượu.", "Nhiệt kế y tế.", "Nhiệt kế thủy ngân."], c: 3, t: "BÀI 4: ĐO NHIỆT ĐỘ" },
+        { q: "Nhiệt kế thủy ngân dựa trên hiện tượng:", a: ["Nở chất rắn.", "Nở các chất.", "Nở chất lỏng.", "Nở chất khí."], c: 2, t: "BÀI 4: ĐO NHIỆT ĐỘ" },
+        { q: "Dụng cụ nào là đo nhiệt độ?", a: ["Đồng hồ.", "Cốc đong.", "Cân.", "Nhiệt kế."], c: 3, t: "BÀI 4: ĐO NHIỆT ĐỘ" },
+        { q: "Đo nhiệt độ sôi của nước dùng:", a: ["Nhiệt kế đổi màu.", "Nhiệt kế rượu.", "Nhiệt kế y tế.", "Nhiệt kế thủy ngân."], c: 3, t: "BÀI 4: ĐO NHIỆT ĐỘ" },
         { q: "Đơn vị đo nhiệt độ là:", a: ["Kg.", "Cm.", "°C.", "Lít."], c: 2, t: "BÀI 4: ĐO NHIỆT ĐỘ" },
-        { q: "Lực tiếp xuất hiện khi vật gây lực ... vật chịu lực:", a: ["Cách xa.", "Có tiếp xúc.", "Nằm gần.", "Không tiếp xúc."], c: 1, t: "BÀI 27: LỰC" },
+        { q: "Lực tiếp xúc xuất hiện khi vật gây lực ... vật chịu lực:", a: ["Cách xa.", "Có tiếp xúc.", "Nằm gần.", "Không tiếp xúc."], c: 1, t: "BÀI 27: LỰC" },
         { q: "Lực không tiếp xúc xuất hiện khi vật gây lực ... vật chịu lực:", a: ["Không tiếp xúc.", "Tiếp xúc.", "Tì sát.", "Ép lên."], c: 0, t: "BÀI 27: LỰC" },
-        { q: "Lực nào sau đây là lực tiếp xúc?", a: ["Trái đất hút vật.", "Tay đẩy xe.", "Nam châm hút sắt.", "Lực điện."], c: 1, t: "BÀI 27: LỰC" },
-        { q: "Lực nào sau đây là lực không tiếp xúc?", a: ["Dây kéo gầu nước.", "Ma sát.", "Mặt bàn đỡ sách.", "Nam châm hút đinh sắt."], c: 3, t: "BÀI 27: LỰC" }
+        { q: "Lực nào sau đây là lực tiếp xúc?", a: ["Trái đất hút vật.", "Tay đẩy bóng.", "Nam châm hút sắt.", "Lực điện."], c: 1, t: "BÀI 27: LỰC" },
+        { q: "Lực nào sau đây là lực không tiếp xúc?", a: ["Kéo dây.", "Ma sát.", "Mặt bàn đỡ sách.", "Nam châm hút đinh."], c: 3, t: "BÀI 27: LỰC" }
     ];
 
-    let current = 0;
-    let scoreC = 0;
-    let scoreW = 0;
-    let picks = new Array(data.length).fill(null);
+    let idx = 0, scoreC = 0, scoreW = 0, picks = new Array(data.length).fill(null);
 
     function render() {
-        const item = data[current];
-        document.getElementById('q-body').textContent = item.q;
-        document.getElementById('topic-tag').textContent = item.t;
-        document.getElementById('p-text').textContent = `${current + 1} / ${data.length}`;
-        document.getElementById('p-bar').style.width = `${((current + 1) / data.length) * 100}%`;
-        document.getElementById('c-count').textContent = scoreC;
-        document.getElementById('w-count').textContent = scoreW;
+        const q = data[idx];
+        document.getElementById('badge').textContent = q.t;
+        document.getElementById('prog-txt').textContent = `${idx + 1} / ${data.length}`;
+        document.getElementById('prog-bar').style.width = `${((idx + 1)/data.length)*100}%`;
+        document.getElementById('sc-c').textContent = scoreC;
+        document.getElementById('sc-w').textContent = scoreW;
+        document.getElementById('q-text').textContent = q.q;
 
-        const list = document.getElementById('a-list');
-        list.innerHTML = '';
-        item.a.forEach((opt, idx) => {
-            const btn = document.createElement('button');
-            btn.className = 'opt-item';
-            btn.innerHTML = `<span class="w-8 h-8 flex items-center justify-center bg-slate-100 rounded-lg mr-4 text-xs font-black text-slate-400">${String.fromCharCode(65+idx)}</span> ${opt}`;
+        const sArea = document.getElementById('steps-area');
+        const sList = document.getElementById('steps-list');
+        if (q.s) {
+            sArea.classList.remove('hidden');
+            sList.innerHTML = q.s.map(i => `<div class="step-box">${i}</div>`).join('');
+        } else {
+            sArea.classList.add('hidden');
+        }
+
+        const oList = document.getElementById('options-list');
+        oList.innerHTML = '';
+        q.a.forEach((opt, i) => {
+            const b = document.createElement('button');
+            b.className = 'opt-btn w-full p-4 rounded-xl text-left font-bold flex items-center gap-3 bg-white';
+            b.innerHTML = `<span class="bg-slate-100 text-slate-400 w-7 h-7 flex items-center justify-center rounded-lg text-[10px]">${String.fromCharCode(65+i)}</span> ${opt}`;
             
-            if (picks[current] !== null) {
-                if (idx === item.c) btn.classList.add('is-correct');
-                else if (idx === picks[current]) btn.classList.add('is-wrong');
-                btn.disabled = true;
+            if (picks[idx] !== null) {
+                if (i === q.c) b.classList.add('is-correct');
+                else if (i === picks[idx]) b.classList.add('is-wrong');
+                b.disabled = true;
             } else {
-                btn.onclick = () => pick(idx);
+                b.onclick = () => select(i);
             }
-            list.appendChild(btn);
+            oList.appendChild(b);
         });
 
-        document.getElementById('prev-btn').disabled = (current === 0);
-        const nextBtn = document.getElementById('next-btn');
-        if (picks[current] !== null) {
-            nextBtn.style.opacity = '1';
-            nextBtn.style.pointerEvents = 'auto';
-            nextBtn.textContent = (current === data.length - 1) ? "XEM KẾT QUẢ" : "TIẾP THEO \u2192";
+        document.getElementById('btn-p').disabled = idx === 0;
+        const nB = document.getElementById('btn-n');
+        if (picks[idx] !== null) {
+            nB.style.opacity = '1';
+            nB.style.pointerEvents = 'auto';
+            nB.textContent = idx === data.length - 1 ? 'KẾT QUẢ' : 'TIẾP THEO';
         } else {
-            nextBtn.style.opacity = '0';
-            nextBtn.style.pointerEvents = 'none';
+            nB.style.opacity = '0';
+            nB.style.pointerEvents = 'none';
         }
     }
 
-    function pick(i) {
-        picks[current] = i;
-        if (i === data[current].c) {
+    function select(i) {
+        picks[idx] = i;
+        const msg = document.getElementById('msg');
+        if (i === data[idx].c) {
             scoreC++;
-            document.getElementById('msg').textContent = "Đúng rồi! Bạn thật giỏi.";
-            document.getElementById('msg').className = "text-green-600 font-bold italic text-sm";
+            msg.textContent = "Chính xác!";
+            msg.className = "text-xs font-bold text-green-500 italic";
         } else {
             scoreW++;
-            document.getElementById('msg').textContent = "Chưa đúng. Hãy xem kỹ lại nhé!";
-            document.getElementById('msg').className = "text-red-500 font-bold italic text-sm";
+            msg.textContent = "Sai rồi, hãy cố gắng câu sau.";
+            msg.className = "text-xs font-bold text-red-500 italic";
         }
         render();
     }
 
-    function next() {
-        if (current < data.length - 1) {
-            current++;
-            document.getElementById('msg').textContent = "Hãy chọn một đáp án đúng nhất";
-            document.getElementById('msg').className = "text-slate-400 font-medium italic text-sm";
+    function n() {
+        if (idx < data.length - 1) {
+            idx++;
+            document.getElementById('msg').textContent = "Chọn đáp án đúng nhất";
+            document.getElementById('msg').className = "text-xs italic text-slate-400 font-medium";
             render();
         } else {
-            finish();
+            document.getElementById('quiz-area').classList.add('hidden');
+            document.getElementById('result-area').classList.remove('hidden');
+            const p = Math.round((scoreC/data.length)*100);
+            document.getElementById('res-c').textContent = scoreC;
+            document.getElementById('res-p').textContent = p + "%";
+            document.getElementById('rank').textContent = p >= 85 ? "Xếp hạng: XUẤT SẮC 🏆" : (p >= 65 ? "Xếp hạng: KHÁ GIỎI 👍" : "Xếp hạng: CẦN CỐ GẮNG 💪");
         }
     }
 
-    function prev() {
-        if (current > 0) {
-            current--;
-            render();
-        }
-    }
+    function p() { if (idx > 0) { idx--; render(); } }
 
-    function finish() {
-        document.getElementById('quiz-view').classList.add('hidden');
-        document.getElementById('result-view').classList.remove('hidden');
-        
-        const pct = Math.round((scoreC / data.length) * 100);
-        document.getElementById('res-c').textContent = scoreC;
-        document.getElementById('res-w').textContent = scoreW;
-        document.getElementById('res-pct').textContent = pct + "%";
-        
-        const rank = document.getElementById('res-rank');
-        const icon = document.getElementById('res-icon');
-        
-        if (pct >= 85) {
-            rank.textContent = "Hạng: XUẤT SẮC";
-            rank.className = "text-xl font-bold mb-8 uppercase tracking-widest text-green-600";
-            icon.textContent = "🏆";
-        } else if (pct >= 65) {
-            rank.textContent = "Hạng: KHÁ GIỎI";
-            rank.className = "text-xl font-bold mb-8 uppercase tracking-widest text-blue-600";
-            icon.textContent = "🥈";
-        } else {
-            rank.textContent = "Hạng: CẦN CỐ GẮNG";
-            rank.className = "text-xl font-bold mb-8 uppercase tracking-widest text-orange-600";
-            icon.textContent = "📚";
-        }
-    }
-
-    render();
+    window.onload = render;
 </script>
 </body>
 </html>
